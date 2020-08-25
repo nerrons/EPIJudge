@@ -1,7 +1,11 @@
 #include "test_framework/generic_test.h"
 short Parity(unsigned long long x) {
-  // TODO - you fill in here.
-  return 0;
+  auto len = sizeof(decltype(x)) * 8;
+  while (len > 1) {
+    len /= 2;
+    x ^= x >> len;
+  }
+  return static_cast<short>(x & 0x1u);
 }
 
 int main(int argc, char* argv[]) {
