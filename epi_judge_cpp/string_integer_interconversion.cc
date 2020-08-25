@@ -1,17 +1,43 @@
 #include <string>
+#include <algorithm>
 
 #include "test_framework/generic_test.h"
 #include "test_framework/test_failure.h"
 using std::string;
 
 string IntToString(int x) {
-  // TODO - you fill in here.
-  return "0";
+  if (x == 0) {
+    return "0";
+  }
+
+  std::string s;
+  auto negative = x < 0;
+  //  x = std::abs(x); Not good, because if x is the most negative number this will overflow
+  while (x) {
+    auto digit = std::abs(x % 10);
+    s.push_back('0' + digit);
+    x /= 10;
+  }
+  if (negative) {
+    s.push_back('-');
+  }
+  std::reverse(s.begin(), s.end());
+  return s;
 }
 int StringToInt(const string& s) {
-  // TODO - you fill in here.
-  return 0;
+  auto res = 0;
+  auto sign = s[0] == '-' ? -1 : 1;
+  auto it = s.begin();
+  while (*it == '-' || *it == '+' || *it == '0') {
+    ++it;
+  }
+  while (it != s.end()) {
+    res = res * 10 + (*it - '0');
+    ++it;
+  }
+  return sign * res;
 }
+
 void Wrapper(int x, const string& s) {
   if (stoi(IntToString(x)) != x) {
     throw TestFailure("Int to string conversion failed");
