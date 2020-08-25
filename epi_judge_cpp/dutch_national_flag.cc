@@ -7,9 +7,33 @@
 using std::vector;
 enum class Color { kRed, kWhite, kBlue };
 
+/**
+ * Smaller numbers: [0, equal)
+ * Equal numbers: [equal, unclass)
+ * Unclassified numbers: [unclass, larger)
+ * Larger numbers: [larger, A.size)
+ */
 void DutchFlagPartition(int pivot_index, vector<Color>* A_ptr) {
-  // TODO - you fill in here.
-  return;
+  auto& A = *A_ptr;
+  const auto pivot = A[pivot_index];
+
+  size_t equal = 0;
+  size_t unclass = 0;
+  size_t larger = A.size();
+
+  while (unclass < larger) {
+    auto& c = A[unclass];
+    if (c == pivot) {
+      ++unclass;
+    } else if (c < pivot) {
+      std::swap(c, A[equal]);
+      ++equal;
+      ++unclass;
+    } else {
+      --larger;
+      std::swap(c, A[larger]);
+    }
+  }
 }
 void DutchFlagPartitionWrapper(TimedExecutor& executor, const vector<int>& A,
                                int pivot_idx) {
